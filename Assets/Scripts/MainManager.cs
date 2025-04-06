@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,6 +8,8 @@ public class MainManager : MonoBehaviour
     public int LineCount = 6;
     public Rigidbody Ball;
 
+    public Button BackButton;
+    public Text LeaderScoreText;
     public Text ScoreText;
     public GameObject GameOverText;
     
@@ -36,6 +36,9 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+        
+        BackButton.onClick.AddListener(BackToMainMenu);
+        UpdateLeaderScore();
     }
 
     private void Update()
@@ -72,5 +75,20 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        PlayerData.Instance.OnGameOver(m_Points);
+        UpdateLeaderScore();
+    }
+
+    private void BackToMainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    private void UpdateLeaderScore()
+    {
+        if (PlayerData.Instance != null)
+        {
+            LeaderScoreText.text = "Best Score : " + PlayerData.Instance.HighestScorePlayerName + " : " + PlayerData.Instance.HighestScore;
+        }
     }
 }
